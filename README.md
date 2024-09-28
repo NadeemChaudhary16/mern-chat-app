@@ -11,7 +11,7 @@ ChatNow is a Full Stack Chatting App built with real-time messaging using Socket
 **Database:** Mongo DB
   
 ## Demo
-You can check out the live demo [here](https://nadeemchaudhary16.github.io/My-Portfolio/).
+You can check out the live demo [here](https://chatnow-969r.onrender.com).
 
 ![](https://github.com/NadeemChaudhary16/mern-chat-app/blob/master/images/ChatNow.png)
 ## Run Locally
