@@ -22,7 +22,7 @@ const Auth = () => {
 
       <div className="z-10 relative h-[80vh] w-full max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-3xl xl:max-w-4xl border overflow-hidden bg-background border-white shadow-lg flex justify-center rounded-lg mt-10">
         <AnimatedGridPattern
-          numSquadata={30}
+          numSquares={30}
           maxOpacity={0.1}
           duration={3}
           repeatDelay={1}
