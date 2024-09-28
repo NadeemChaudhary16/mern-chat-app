@@ -1,47 +1,47 @@
-import { ScrollArea } from "@/components/ui/scroll-area"
-
-import {
-  isLastMessage,
-  isSameSender,
-  isSameSenderMargin,
-  isSameUser,
-} from "@/config/ChatLogics"
-import { ChatState } from "@/ContextApi/ChatContext"
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { ChatState } from "@/ContextApi/ChatContext";
+import { useEffect, useRef } from "react";
 
 const ScrollableChat = ({ messages }) => {
-  const { user } = ChatState();
+  const { user } = ChatState(); // Get the current user from context
+
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   return (
-    <ScrollArea className="h-[60vh]">
+    <ScrollArea className="h-[65vh] overflow-y-auto p-2 pt-6">
       {messages &&
-        messages.map((m, i) => (
-          <div className="flex" key={m._id}>
-            {(isSameSender(messages, m, i, user._id) ||
-              isLastMessage(messages, i, user._id)) && (
-              <div className="">
-                <img
-                  className="w-8 h-8 rounded-full mt-2 mr-1 cursor-pointer"
-                  src={m.sender.pic}
-                  alt={m.sender.name}
-                />
-              </div>
-            )}
-            <span 
-              style={{
-                backgroundColor: `${
-                  m.sender._id === user._id ? "#BEE3F8" : "#B9F5D0"
-                }`,
-                marginLeft: isSameSenderMargin(messages, m, i, user._id),
-                marginTop: isSameUser(messages, m, i, user._id) ? 3 : 10,
-                borderRadius: "20px",
-                padding: "5px 15px",
-                maxWidth: "75%",
-              }}
+        messages.map((message, index) => (
+          message.sender.name === user.name ? ( // If the message is from the current user
+            <div
+              className="flex flex-col items-end mb-4"
+              key={message._id || index}
             >
-              {m.content}
-            </span>
-          </div>
+              <p className="text-xs text-gray-500 mb-1">You</p> {/* Sender's name */}
+              <div className="bg-green-400 text-white px-3 py-1 rounded-xl max-w-xs break-words">
+                <p>{message.content}</p> 
+              </div>
+            </div>
+          ) : ( // If the message is from another user
+            <div
+              className="flex flex-col items-start mb-4"
+              key={message._id || index}
+            >
+              <p className="text-xs text-gray-500 mb-1">{message.sender.name}</p> {/* Sender's name */}
+              <div className="bg-blue-300 text-black px-3 py-1 rounded-xl max-w-xs break-words">
+                <p>{message.content}</p>
+              </div>
+            </div>
+          )
         ))}
+      <div ref={messagesEndRef}></div>
     </ScrollArea>
   );
 };

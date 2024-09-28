@@ -12,14 +12,17 @@ const ChatProvider = ({ children }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-  console.log("User Info from Local Storage:", userInfo);
-  setUser(userInfo);
+  const loggedInUser = JSON.parse(localStorage.getItem("userInfo"));
+  console.log("User Info(loggedInUser) in Local Storage:", loggedInUser);
+  setUser(loggedInUser);
 
-  if (!userInfo) {
+  if (loggedInUser) {
+    navigate("/chat")
+  }
+  else{
     navigate("/auth");
   }
-}, [navigate]);
+}, []);
 
 
   return (

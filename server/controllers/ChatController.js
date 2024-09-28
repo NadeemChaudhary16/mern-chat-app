@@ -11,32 +11,49 @@ const accessChat = asyncHandler(async (req, res) => {
     return res.status(400).send("UserId is required");
   }
 
-  const chat = await Chat.findOne({
-    isGroupChat: false,
-    users: { $all: [req.user._id, userId] },  
-  })
-    .populate("users", "-password")
-    .populate({
-      path: "latestMessage",
-      populate: { path: "sender", select: "name pic email" },
-    });
+  try {
+    console.log("AccessChat Request Initiated");
+    console.log("Requester UserId:", req.user._id);  // Check if the user is authenticated and _id exists
+    console.log("Target UserId:", userId);  // Check if the target userId exists
 
-  if (chat) {
-    res.json(chat);
-  } else {
-    try {
-      const newChat = await Chat.create({
-        chatName: "sender",
-        isGroupChat: false,
-        users: [req.user._id, userId],
+    // Check if a one-on-one chat exists
+    const chat = await Chat.findOne({
+      isGroupChat: false,
+      users: { $all: [req.user._id, userId] },
+    })
+      .populate("users", "-password")
+      .populate({
+        path: "latestMessage",
+        populate: { path: "sender", select: "name pic email" },
       });
 
-      const fullChat = await Chat.findById(newChat._id)
-        .populate("users", "-password");
-      res.status(200).json(fullChat);
-    } catch (error) {
-      res.status(500).send("Error creating chat");
+    if (chat) {
+      console.log("Existing chat found between the users.");
+      return res.status(200).json(chat);
     }
+     // Fetch the other user's info
+     const userToChatWith = await User.findById(userId).select("-password");
+
+     if (!userToChatWith) {
+       return res.status(404).send("User not found");
+     }
+
+    // Create new chat if it doesn't exist
+    console.log("No existing chat found. Creating a new chat.");
+    const newChat = await Chat.create({
+      chatName: userToChatWith.name,  
+      isGroupChat: false,
+      users: [req.user._id, userId],
+    });
+
+    const fullChat = await Chat.findById(newChat._id).populate("users", "-password");
+
+    // If chat creation was successful, log details
+    console.log("New chat created:", fullChat);
+    return res.status(200).json(fullChat);
+  } catch (error) {
+    console.error("Error in accessChat:", error.message);  // Detailed error logging
+    return res.status(500).send("Error accessing or creating chat");
   }
 });
 

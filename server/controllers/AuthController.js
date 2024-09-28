@@ -4,7 +4,7 @@ const generateToken = require("../config/generateToken");
 const bcrypt=require("bcrypt")
 
 const registerUser = asyncHandler(async (req, res) => {
-  const { name, email, password,confirmPassword } = req.body;
+  const { name, email, password,confirmPassword, image } = req.body;
   if (!name || !email || !password || !confirmPassword) {
     res.status(400);
     throw new Error("All fields are required");
@@ -24,12 +24,15 @@ const registerUser = asyncHandler(async (req, res) => {
     name,
     email,
     password,
+    image: image || undefined,
   });
   if (newUser) {
     res.status(201).json({
-      id: newUser._id,
+      _id: newUser._id,
       name: newUser.name,
       email: newUser.email,
+      isAdmin: newUser.isAdmin,
+      image: newUser.image,
       token: generateToken(newUser.email,newUser._id)
     });
   } else {
@@ -43,10 +46,12 @@ const loginUser=asyncHandler(async(req,res)=>{
        const user=await User.findOne({email})
        if(user && (await bcrypt.compare(password, user.password))){
         res.json({
-          id: user._id,
+          _id: user._id,
           name: user.name,
           email: user.email,
           password:user.password,
+          isAdmin: user.isAdmin,
+          image: user.image,
           token: generateToken(user.email,user._id)
         })
        }

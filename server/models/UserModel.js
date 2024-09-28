@@ -19,14 +19,15 @@ const userSchema = new Schema(
     image: {
       type: String,
       required: false,
-      default: "",
+      default: "https://github.com/shadcn.png",
     },
     profileSetup: {
       type: Boolean,
       required: false,
     },
-    color: {
-      type: Number,
+    isAdmin: {
+      type: Boolean,
+      required: true,
       default: false,
     },
   },

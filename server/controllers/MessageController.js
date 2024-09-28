@@ -5,32 +5,36 @@ const Chat = require("../models/ChatModel");
 
 // Send Message Controller
 const sendMessage = asyncHandler(async (req, res) => {
-  const { content, chatId } = req.body;
-
-  if (!content || !chatId) {
+  const { content, chatId, recipientId } = req.body;
+  // Validation check for content and chatId
+  if (!content || !chatId || !recipientId) {
     return res.status(400).json({ message: "Invalid data passed into request" });
   }
 
   try {
+    // Create a new message
     let message = await Message.create({
       sender: req.user._id,
+      recipient: recipientId,  // Assuming recipientId is passed in req.body
       content: content,
       chat: chatId,
     });
 
-    // Populating the message fields with relevant data
-    message = await message.populate("sender", "name pic");
+    // Populate the necessary fields (sender, chat, recipient)
+    message = await message.populate("sender", "name image email");
     message = await message.populate("chat");
+    message = await message.populate("recipient","name image email");
+
     message = await User.populate(message, {
       path: "chat.users",
-      select: "name pic email",
+      select: "name image email",
     });
 
-    // Use { new: true } to return the updated document
+    // Update the latest message in the chat
     await Chat.findByIdAndUpdate(
       chatId,
       { latestMessage: message },
-      { new: true }  // This returns the updated chat document after modification
+      { new: true }  // Return the updated document
     );
 
     res.json(message);
@@ -44,12 +48,13 @@ const sendMessage = asyncHandler(async (req, res) => {
 const allMessages = asyncHandler(async (req, res) => {
   try {
     const messages = await Message.find({ chat: req.params.chatId })
-      .populate("sender", "name pic email")
+      .populate("sender", "name image email")
+      .populate("recipient", "name image email") // Populating recipient's info
       .populate("chat");
 
     res.json(messages);
   } catch (error) {
-    console.error("Error fetching messages:", error); // Debug message
+    console.error("Error fetching messages:", error);
     res.status(500).json({ message: "Error fetching messages", error });
   }
 });

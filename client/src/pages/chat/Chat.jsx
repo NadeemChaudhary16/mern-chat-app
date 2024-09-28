@@ -5,7 +5,7 @@ import Chatbox from "@/components/Chat/Chatbox";
 import { useToast } from "@/components/ui/use-toast";
 import { ChatState } from "@/ContextApi/ChatContext";
 import MyChats from "@/components/Chat/MyChats";
-
+import Footer from "@/components/Chat/Footer";
 import {
   ResizableHandle,
   ResizablePanel,
@@ -18,14 +18,17 @@ const Chat = () => {
   const [searchResult, setSearchResult] = useState([]);
   const [fetchAgain, setFetchAgain] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const { selectedChat } = ChatState();
   const { toast } = useToast();
   const { user } = ChatState();
 
-  const handleSearch = async () => {
-    if (!search) {
-      toast({
-        title: "Please enter something in search",
-      });
+  const handleSearch = async (query) => {
+    setSearch(query);
+    if (!query) {
+      setSearchResult([]); // Clear results when the input is empty
+      // toast({
+      //   title: "Please enter something in search",
+      // });
       return;
     }
 
@@ -37,10 +40,10 @@ const Chat = () => {
         },
       };
 
-      const { data } = await axios.get(`/api/user?search=${search}`, config);
+      const { data } = await axios.get(`/api/user?search=${query}`, config);
 
       setSearchResult(data);
-      console.log("Search Query:", search);
+      console.log("Search Query:",query);
       console.log("Search Results:", data);
     } catch (error) {
       toast({
@@ -54,46 +57,55 @@ const Chat = () => {
   }, [searchResult]);
 
   return (
-    <div>
+    <div className="font-playpen mb-0">
       <Header
-        setIsDrawerOpen={setIsDrawerOpen} 
-        search={search} 
-        setSearch={setSearch} 
-        handleSearch={handleSearch} 
+        setIsDrawerOpen={setIsDrawerOpen}
+        search={search}
+        setSearch={setSearch}
+        handleSearch={handleSearch}
       />
       <div className="">
-        <Sidebar isDrawerOpen={isDrawerOpen} 
-        setIsDrawerOpen={setIsDrawerOpen} 
-        searchResult={searchResult} 
-        search={search} 
-        setSearch={setSearch} 
-        handleSearch={handleSearch}  />
-       
+        <Sidebar
+          isDrawerOpen={isDrawerOpen}
+          setIsDrawerOpen={setIsDrawerOpen}
+          searchResult={searchResult}
+          setSearchResult={setSearchResult}
+          search={search}
+          setSearch={setSearch}
+          handleSearch={handleSearch}
+        />
 
         <ResizablePanelGroup
           direction="horizontal"
-          className="h-full w-full rounded-lg border"
+          className="h-full  rounded-lg rounded-t-none border"
         >
-          <ResizablePanel defaultSize={20}>
-            <div className="flex h-full w-full items-center justify-center p-6">
+          <ResizablePanel
+            defaultSize={20}
+            className={`${selectedChat ? "hidden md:block" : "block"}`}
+          >
+            <div className="flex h-full items-center justify-center p-2  pt-0 ">
               <span className="font-semibold w-full h-full">
                 <MyChats fetchAgain={fetchAgain} />
               </span>
             </div>
           </ResizablePanel>
-          <ResizableHandle withHandle />
-          <ResizablePanel defaultSize={80}>
-            <div className="flex h-full w-full items-center justify-center p-6">
-              <span className="font-semibold w-full h-full">
+          <ResizableHandle />
+          <ResizablePanel
+            defaultSize={80}
+            className={`${selectedChat ? "block" : "hidden sm:block"}`}
+          >
+            <div className="flex  h-full w-full items-center justify-center">
+              <div className="font-semibold font-playpen w-full h-full">
                 <Chatbox
                   fetchAgain={fetchAgain}
                   setFetchAgain={setFetchAgain}
                 />
-              </span>
+              </div>
             </div>
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>
+      <Footer />
     </div>
   );
 };

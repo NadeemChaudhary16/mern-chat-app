@@ -19,6 +19,7 @@ const Sidebar = ({
   searchResult,
   search,
   setSearch,
+  setSearchResult,
   handleSearch,
   isDrawerOpen,
   setIsDrawerOpen,
@@ -36,12 +37,16 @@ const Sidebar = ({
       };
 
       const { data } = await axios.post(`/api/chat`, { userId }, config);
+      console.log("Chat data:", data);
 
       if (!chats.find((c) => c._id === data._id)) {
         setChats([data, ...chats]);
       }
 
       setSelectedChat(data);
+      setIsDrawerOpen(false); // Close drawer after chat is accessed
+      setSearch(""); // Clear search input
+      setSearchResult([]); // Clear search results
     } catch (error) {
       toast({
         title: "Error fetching the chat",
@@ -60,20 +65,21 @@ const Sidebar = ({
         {/* <DrawerTrigger asChild>
           <Button onClick={() => setIsDrawerOpen(true)}>Open Drawer</Button>
         </DrawerTrigger> */}
-        <DrawerContent className="w-[300px]">
+        <DrawerContent className="w-[300px] font-playpen">
           <DrawerHeader>
             <DrawerTitle>Search User by name or email</DrawerTitle>
             <DrawerDescription>
              
-              <div className="flex gap-2">
+              <div className="flex gap-2 mt-4">
                 <Input
                   type="text"
                   name="searchUser"
                   placeholder="Search User"
                   value={search}
-                  onChange={(e) => setSearch(e.target.value)}
+                  onChange={(e) => handleSearch(e.target.value)}
+                  
                 />
-                <Button onClick={handleSearch}>Go</Button>
+                {/* <Button onClick={handleSearch}>Go</Button> */}
               </div>
             </DrawerDescription>
           </DrawerHeader>
@@ -82,6 +88,7 @@ const Sidebar = ({
               searchResult.map((user) => (
                 <div
                   key={user._id}
+                  user={user}
                   className="flex gap-2 items-center p-2 border-b cursor-pointer"
                   onClick={() => accessChat(user._id)}
                 >
@@ -97,11 +104,10 @@ const Sidebar = ({
                 </div>
               ))
             ) : (
-              <div>No users found.</div>
+              <div className="text-center">No users found.</div>
             )}
           </div>
           <DrawerFooter>
-            <Button>Submit</Button>
             <Button variant="outline" onClick={() => setIsDrawerOpen(false)}>
               Cancel
             </Button>

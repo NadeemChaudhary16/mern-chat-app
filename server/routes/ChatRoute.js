@@ -13,8 +13,8 @@ const router = express.Router();
 router.post("/", isLoggedIn, accessChat);
 router.get("/", isLoggedIn, fetchChats);
 router.post("/group", isLoggedIn, createGroupChat);
-router.put("/rename", isLoggedIn, renameGroup);
-router.put("/groupAdd", isLoggedIn, addToGroup);
-router.put("/groupRemove", isLoggedIn, removeFromGroup);
+router.patch("/renameGroup", isLoggedIn, renameGroup);
+router.patch("/groupAdd", isLoggedIn, addToGroup);
+router.patch("/groupRemove", isLoggedIn, removeFromGroup);
 
 module.exports = router;

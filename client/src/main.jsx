@@ -7,10 +7,12 @@ import { BrowserRouter } from "react-router-dom";
 import ChatProvider from "./ContextApi/ChatContext.jsx";
 
 createRoot(document.getElementById("root")).render(
-  <BrowserRouter>
-    <ChatProvider>
-      <App />
-      <Toaster />
-    </ChatProvider>
-  </BrowserRouter>
+  
+    <BrowserRouter>
+      <ChatProvider>
+        <App />
+        <Toaster />
+      </ChatProvider>
+    </BrowserRouter>
+  
 );

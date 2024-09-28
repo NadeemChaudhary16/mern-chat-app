@@ -1,7 +1,12 @@
 #root {
   /* max-width: 1280px; */
   /* margin: 0 auto; */
-  padding: 1rem;
+  /* padding: 1rem; */
+  padding-bottom: 0;
   text-align: center;
 }
+.custom-height {
+  height: calc(100vh - 125px);
+}
+
 

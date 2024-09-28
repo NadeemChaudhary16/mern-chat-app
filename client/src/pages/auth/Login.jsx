@@ -48,12 +48,12 @@ const Login = () => {
     } catch (err) {
       console.log(err);
       toast({
-        description: "Something went wrong",
+        description: "Email or Password is incorrect",
       });
     }
   };
   return (
-    <form onSubmit={handleLoginSubmit} className="flex flex-col gap-4">
+    <form onSubmit={handleLoginSubmit} className="flex flex-col gap-4 ">
       <div className="space-y-1 ">
         <Input
           type="email"

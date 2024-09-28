@@ -8,7 +8,7 @@ import Signup from "./Signup"; // Import Signup Component
 
 const Auth = () => {
   return (
-    <div className="flex justify-center ">
+    <div className="flex justify-center items-center  px-4 sm:px-6 lg:px-8 font-playpen ">
       <DotPattern
         width={20}
         height={20}
@@ -20,7 +20,7 @@ const Auth = () => {
         )}
       />
 
-      <div className="z-10 relative h-[80vh] w-[50vw] border overflow-hidden bg-background border-white shadow-lg flex justify-center  mt-10 rounded-lg">
+      <div className="z-10 relative h-[80vh] w-full max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-3xl xl:max-w-4xl border overflow-hidden bg-background border-white shadow-lg flex justify-center rounded-lg mt-10">
         <AnimatedGridPattern
           numSquadata={30}
           maxOpacity={0.1}
@@ -31,20 +31,21 @@ const Auth = () => {
             "inset-x-0 inset-y-[-30%] h-[200%] skew-y-12"
           )}
         />
-        <div className="flex flex-col gap-10 text-lg text-green-700">
-          {" "}
-          Welcome to Chat App
-          <Tabs defaultValue="login" className="h-full w-[400px]">
-            <TabsList className="flex gap-4">
+        <div className="flex flex-col gap-4 sm:gap-6 md:gap-8 text-lg text-green-700 p-6 sm:p-8 lg:p-10">
+          <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold ">
+            Welcome to ChatNow
+          </h1>
+          <Tabs defaultValue="login" className="w-full">
+            <TabsList className="flex justify-center gap-2 sm:gap-4 mb-4">
               <TabsTrigger
                 value="login"
-                className="border-b-2   data-[state=active]:border-b-purple-500 transition-all duration-300 rounded-xl px-8"
+                className="border-b-2 data-[state=active]:border-b-purple-500 transition-all duration-300 rounded-xl px-6 sm:px-8"
               >
                 Login
               </TabsTrigger>
               <TabsTrigger
                 value="signup"
-                className="border-b-2  data-[state=active]:border-b-purple-500 transition-all duration-300  rounded-xl px-8"
+                className="border-b-2  data-[state=active]:border-b-purple-500 transition-all duration-300  rounded-xl px-6 sm:px-8"
               >
                 Signup
               </TabsTrigger>

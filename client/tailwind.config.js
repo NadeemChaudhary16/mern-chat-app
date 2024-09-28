@@ -71,6 +71,9 @@ module.exports = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
+      fontFamily: {
+        playpen: ['"Playpen Sans"', 'sans-serif'], // Add your custom font
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],

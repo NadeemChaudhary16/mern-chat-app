@@ -1,15 +1,16 @@
 import React from "react";
-
+import { DNA } from 'react-loader-spinner'
 const Spiner = () => {
   return (
-    <div className="mt-4 d-flex justify-content-center">
-      <div
-        className="spinner-border text-primary"
-        style={{ width: "4rem", height: "4rem", fontSize: "2rem" }}
-        role="status"
-      >
-        <span className="visually-hidden">Loading...</span>
-      </div>
+    <div className="mt-4 flex justify-center items-center">
+      <DNA
+        visible={true}
+        height="80"
+        width="80"
+        ariaLabel="dna-loading"
+        wrapperStyle={{}}
+        wrapperClass="dna-wrapper"
+      />
     </div>
   );
 };

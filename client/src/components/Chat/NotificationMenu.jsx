@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
-import { getSender } from "@/config/ChatLogics"; // Import your getSender function
 import { ChatState } from "@/ContextApi/ChatContext";
-
+import { IoNotificationsOutline } from "react-icons/io5";
+import { Tooltip } from 'react-tooltip'
 import {
   Menubar,
   MenubarContent,
@@ -13,23 +13,26 @@ import {
 const NotificationMenu = () => {
   const { notification, setSelectedChat, setNotification, user } = ChatState();
 
-   // Handle state updates to ensure the notification count is displayed correctly
-   useEffect(() => {
+  // Handle state updates to ensure the notification count is displayed correctly
+  useEffect(() => {
     // You can log or check notifications here to see if they are being updated
     console.log("Current notifications:", notification);
   }, [notification]); // Re-run this effect when `notification` state changes
   return (
-
-      <Menubar>
-        <MenubarMenu className="relative">
-        
-          <MenubarTrigger>Notificatons</MenubarTrigger>
-          <div className="absolute top-1  flex items-center justify-center w-5 h-5 bg-red-500 text-white text-xs rounded-full">
-            {notification.length}
-          </div>
-          <MenubarContent>
+    <Menubar>
+      <MenubarMenu className="relative">
+        <MenubarTrigger data-tooltip-id="my-tooltip2" data-tooltip-content="Notifications" className="cursor-pointer">
+          <IoNotificationsOutline size={30}/>
+          <Tooltip id="my-tooltip2" place="bottom" type="dark" effect="solid" style={{ borderRadius:"10px" }} />
+        </MenubarTrigger>
+        <div className="absolute top-1  flex items-center justify-center w-5 h-5 bg-red-500 text-white text-xs rounded-full">
+          {notification.length}
+        </div>
+        <MenubarContent>
           {!notification.length ? (
-            <MenubarItem className="text-center text-gray-500">No New Messages</MenubarItem>
+            <MenubarItem className="text-center text-gray-500">
+              No New Messages
+            </MenubarItem>
           ) : (
             notification.map((notif) => (
               <MenubarItem
@@ -42,15 +45,15 @@ const NotificationMenu = () => {
               >
                 {notif.chat.isGroupChat
                   ? `New Message in ${notif.chat.chatName}`
-                  : `New Message from ${getSender(user, notif.chat.users)}`}
+                  : `New Message from ${
+                      notif.chat.users.find((u) => u._id !== user._id)?.name
+                    }`}
               </MenubarItem>
             ))
           )}
-          
-          </MenubarContent>
-        </MenubarMenu>
-      </Menubar>
-  
+        </MenubarContent>
+      </MenubarMenu>
+    </Menubar>
   );
 };
 
